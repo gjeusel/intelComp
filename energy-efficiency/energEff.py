@@ -8,8 +8,13 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 
-def write_df_to_png(dataset, fout):
-    template = r'''\documentclass[preview]{{standalone}}
+def write_df_to_png(dataset, fout, col_width=3.0, row_height=0.625, font_size=14,
+                     header_color='#40466e', row_colors=['#f1f1f2', 'w'], edge_color='w',
+                     bbox=[0, 0, 1, 1], header_columns=0,
+                     ax=None, **kwargs):
+
+    template = r'''
+    \documentclass[landscape]{{standalone}}
     \usepackage{{booktabs}}
     \begin{{document}}
     {}
@@ -19,8 +24,9 @@ def write_df_to_png(dataset, fout):
     with open("tmp.tex", 'wb') as f:
         f.write(template.format(dataset.to_latex()))
 
-    # subprocess.call(['pdflatex', "tmp.tex"])
-    # subprocess.call(['convert', '-density', '300', "tmp.pdf", '-quality', '90', fout])
+    subprocess.call(['pdflatex', "tmp.tex"])
+    subprocess.call(['convert', '-density', '300', "tmp.pdf", '-quality', '90', fout])
+    subprocess.call(['rm', 'tmp.aux', 'tmp.log', 'tmp.pdf', 'tmp.tex'])
 
 
 def main():
@@ -57,7 +63,7 @@ def main():
     # df.style.set_caption('Colormaps, with a caption.')\
     #         .background_gradient(cmap=cm)
 
-    # write_df_to_png(table_describe, "energ_describe.png")
+    write_df_to_png(table_describe, "energ_describe.png")
 
     # table_describe_X = table_describe.iloc[:, 0:7]
     # print table_describe_X
