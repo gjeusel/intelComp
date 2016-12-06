@@ -1,0 +1,422 @@
+%----------------------------------------------------------------------------------------
+%    PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{article} % A4 paper and 11pt font size
+
+% Brazilian encoding :
+\usepackage[brazilian]{babel} % English language/hyphenation
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx} % to insert png
+\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+%\usepackage{geometry}
+%\geometry{
+% %a4paper,
+% %total={170mm,257mm},
+% %left=25mm,
+% %top=25mm,
+%}
+
+\usepackage{adjustbox} % for better figure positionning
+\usepackage[a4paper]{geometry} % for geometry changes in only one page (\newgeometry{...})
+
+\usepackage{sectsty} % Allows customizing section commands
+%\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\usepackage{float}% If comment this, figure can moves to next page
+
+\usepackage{indentfirst}% for indenting also the first paragraph after begin section
+%\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%    TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{
+\normalfont \normalsize
+\textsc{Universidade Federal do Rio de Janeiro} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Aprendizado de Máquina\\Eficiência energética dos edifícios \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Aluno: Guillaume Jeusel} % Your name
+
+%\Professor: Alexandre G. Evsukoff
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\date{\parbox{\linewidth}\bigskip%
+  Professor: Alexandre G. Evsukoff \endgraf\bigskip
+  Disciplina: Inteligência Computacional \endgraf\bigskip
+  {\centering\normalsize\today\endgraf}
+  }
+
+\begin{document}
+
+\maketitle % Print the title
+\newpage
+
+\tableofcontents % Print table of content
+\newpage
+
+%----------------------------------------------------------------------------------------
+%    Introduction :
+%----------------------------------------------------------------------------------------
+
+\section{Introdução}
+
+\subsection{Problema}
+Com uma demanda de energia sempre crescente nosso mundo, o problema de economia de energia é colocado no centro das preocupações.
+O conceito de \emph{négaWatt} \cite{ref_negawatt} se base sobre a ideá que é mais barato economizar energia do que comprar-lho.
+E um campo cujo desperdício de energia continua a ser importante é o edifício.
+
+Por conseguinte, as investigações na área do desempenho energético dos edifícios cresceu muito recentemente;
+uma acção prioritária que as sociedades deve ter em mente é a redução do consumo de energia dos novos edifícios, também como a renovação dos antigos.
+A propósito, a legislação sobre o desempenho energético dos edifícios é sempre mas exigente,
+especificamente nos países europeus com a directiva 2002/91/CE limitando o consumo de energia dos edifícios \cite{ref_europ_energ}.
+
+%------------------------------------------------
+
+\subsection{Conhecimento Prévio}
+Para o design desses edifícios, é necessário a computação dos termos chamados \emph{“Heat Load” e “Cooling Load”}
+(que pode ser traduzido pelo “carga de aquecimento” e “carga de arrefecimento” respetivamente).
+Eles são diretamente ligados à especificação dos equipamentos responsáveis para manter uma temperatura confortável, e então ao consumo energético.
+Esses coeficientes são dependentes das características geométricas dos edifícios, como também do clima local e do uso deles (industrial, casal …).
+
+Existem muitos diferentes software de simulação que são eficientes para prever o consumo energético dos edifícios em projeto com uma precisão aceitável.
+Eles resolvam as equações diferencias da termodinmica aplicada a uma geometria particular.
+No enquanto, essas simulações podem demorar muito tempo, sem mencionar que quando um parmetro é mudado, a simulação deve ser reinicializada desde ao início.
+
+Desse fato, um interesso crescente sobre o uso das técnicas de aprendizado de máquinas nasci.
+A ideá é a seguinte: suponho que você tem um banco de dados recente com as características e cargas de um grande número de edifícios,
+o uso de estatísticas e aprendizado de máquinas pode reduzir o tempo de computação e facilitar o experimento de diversos parmetros.
+Nos podemos pensar até criar um banco de dados com os diferentes resultados de simulação,
+e depois prever o desempenho energético de um novo edifício com interpolação dos resultados que nos já temos.
+
+Isto foi a ideá do engenheiro civil \emph{Angeliki Xifara} e do matemático \emph{Athanasios Tsanas} da universidade de Oxford.
+Usando o software Ecotect, um conjunto de dado foi criado da simulação do desempenho energético para 768 geometrias de edifícios,
+assumindo uma localização em Atena, Grécia e um uso residencial com sete pessoas.
+Nos vamos estudar esse banco de dados.
+
+Para ter mais informações sobre as hipóteses de simulação, deve-se referir ao papel deles \cite{ref_Athanasios}.
+
+
+%----------------------------------------------------------------------------------------
+%    Descrição dos dados :
+%----------------------------------------------------------------------------------------
+
+\section{Descrição dos dados}
+
+\subsection{Dados}
+O dataset é tirado do web-site UCI – Machine Learning Repository \cite{ref_UCI}.
+A figura~\ref{dados_resumo} contem um resumo geral desse conjunto de dados.
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/resumo_dos_dados.png}
+\end{center}
+\caption{Características dos dados}
+\label{dados_resumo}
+\end{figure}
+
+\medskip
+Ele é composto de 768 registros e tem 8 variáveis de entrada e 2 de saídas que são as seguintes:
+
+\begin{table}[H]
+\caption{Mathematical representation of the input and output variables}
+\medskip
+\renewcommand\arraystretch{1.3}
+\renewcommand\tabcolsep{0pt}
+  \begin{tabular*}{1\linewidth}{@{\extracolsep{\fill}}ccc}
+    \hline
+    Mathematical representation & Input or output variable & Number of possible values \\
+    \hline
+    X1 & Relative Compactness & 12 \\
+    X2 & Surface Area & 12 \\
+    X3 & Wall Area & 7 \\
+    X4 & Roof Area & 4 \\
+    X5 & Overall Height & 2 \\
+    X6 & Orientation & 4 \\
+    X7 & Glazing Area & 4 \\
+    X8 & Glazing Area Distribution & 6 \\
+    y1 & Heating Load & 586 \\
+    y2 & Cooling Load & 636 \\
+  \end{tabular*}\par\medskip
+\label{tab:priors}
+\end{table}
+
+É importante de notar que as variáveis de entradas são descontinuidades, e que não tem valores ausentes.
+
+%------------------------------------------------
+
+\subsection{Estatísticas do conjunto de dados}
+
+\subsubsection{Variáveis de entradas}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+\adjustbox{trim={.0\width} {.0\height} {0.0\width} {0.069\height},clip}{
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/Xvar_desc_part1.png}
+}
+\adjustbox{trim={.0\width} {.0\height} {0.0\width} {0.069\height},clip}{
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/Xvar_desc_part2.png}
+}
+  \end{center}
+  \caption{Estatísticas das variáveis de entradas}
+  \label{statis_X}
+  \end{figure}
+
+Olhando para a valor media das variáveis na figura, nos podemos observar uma diferencia de escala entre as variaveis.
+Na verdade, a maioria dessas variáveis não têm a mesma unidade:
+\begin{itemize}
+\item 0 < X1 < 1 sem unidades
+\item X2, X3, X4 em metros quadrados
+\item X5 em metros
+\item X7 em percentagem
+\item X8 em metros quadrados
+\end{itemize}
+
+Quando nos vamos comparar essas variáveis entre elas, nos vamos ter que padronizar elas.
+O escolho da métrica de Z-score foi feito, embora que a padronização min-max pudesse ser feita,
+devido ao fato que a amostra não tem outliers como nos vamos ver na secção seguinte.
+
+Formula de padronização Z-score applicada:
+\begin{equation}
+\hat{X}_{i}(t) = \frac{X_{i}(t) - \bar{X}_{i}}{\hat{\sigma}_{i}}
+\end{equation}
+
+\subsubsection{Variáveis de saídas}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+\adjustbox{trim={.0\width} {.0\height} {0.0\width} {0.069\height},clip}{
+  \includegraphics[width=0.6\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/Yvar_desc.png}
+}
+  \end{center}
+  \caption{Estatísticas das variáveis de saídas}
+  \label{statis_Y}
+  \end{figure}
+
+As variáveis de saída aparecem bastante semelhantes. Nos vamos verificar isso com os histogramas.
+
+%----------------------------------------------------------------------------------------
+
+\subsection{Detecção de outliers}
+
+\subsubsection{Box-plot}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \adjustbox{trim={.0\width} {.0\height} {0.0\width} {0.069\height},clip}{
+    \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/Xvar_Znormalized_boxplot.png}
+  }
+  \end{center}
+  \caption{Box-plot das variáveis de entradas Z-padronizadas}
+  \label{boxplot_X}
+  \end{figure}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \adjustbox{trim={.0\width} {.0\height} {0.0\width} {0.069\height},clip}{
+    \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/Yvar_Znormalized_boxplot.png}
+  }
+  \end{center}
+  \caption{Box-plot das variáveis de saídas Z-padronizadas}
+  \label{boxplot_Y}
+  \end{figure}
+
+Pela leitura desses gráficos, nenhuma das variáveis aparecem conter valores aberantes.
+Mas deve ser considerado todas as variáveis simultaneamente com os métodos baseados em distancia para ser capaz de comprovar esse resultado.
+Nos vamos nos concentrar apenas nas variáveis de entrada na proxima seção.
+
+\subsubsection{A métrica euclideana}
+
+A métrica de distancia \emph{Euclidiana} (ou norma $L_2$) é a extensão da fórmula clássica da geometria para \emph{p} dimensões:
+\begin{equation}
+dist_{E}(v,u) = ||v-u|| = \sum_{i=1}^{p} (v_i - u_i)
+\end{equation}
+
+A matriz de distancias obtida é colocada na figura~\ref{dist_eucl_matrix}, e o gráfico das médias de distancias na figura~\ref{dist_eucl_graph}.
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/distance_matrix_euclidean_Z_normed.png}
+  \end{center}
+  \caption{Matriz de distancias euclideana com variaveis Z-padronizadas}
+  \label{dist_eucl_matrix}
+  \end{figure}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/graph_mean_euclidean_dist_Znormed.png}
+  \end{center}
+  \caption{Médias de distancias Euclidiana em ordem crescente}
+  \label{dist_eucl_graph}
+  \end{figure}
+
+
+\subsubsection{A métrica Mahalanobis}
+
+Distancia de \emph{Mahalanobis} é a distancia geométrica ponderada pelo inverso da matriz de covariancias estimada no conjunto de dados:
+\begin{equation}
+dist_{\Sigma}(v,u) = \sqrt{(v-u)\hat{\Sigma}^{-1}(v-u)^T}
+\end{equation}
+
+A matriz de distancias obtida é colocada na figura~\ref{dist_maha_matrix}, e o gráfico das médias de distancias na figura~\ref{dist_maha_graph}.
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/distance_matrix_mahalanobis.png}
+  \end{center}
+  \caption{Matriz de distancias Mahalanobis}
+  \label{dist_maha_matrix}
+  \end{figure}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/graph_mean_mahalanobis_dist.png}
+  \end{center}
+  \caption{Médias de distancias Mahalanobis em ordem crescente}
+  \label{dist_maha_graph}
+  \end{figure}
+
+\subsubsection{Discussão dos resultados}
+
+Como um lembrete, o gráfico das médias ordenadas é obtida pela fórmula:
+\begin{equation}
+\overline{dist}_i = \frac{1}{N}*\sum_{t=1}^{N} (distance(u_i, v_t))
+\end{equation}
+
+Podemos considerar que não há nenhum registro aberrantes, porque nenhum é fortemente afastado dos outros (seja com a medida euclideana ou a medida Mahalanobis).
+Além disso, não é surpreendente porque as variáveis de entradas foram selecionadas pelo engenheiro que fiz as simulações, então ele escolheu uma faixa responsável para cada um delas.
+
+É importante de notar que a distancia de Mahalanobis é adequada para medir a separação entre um conjunto de dados com
+variáveis geradas pela distribuição normal multivariada.
+No enquanto, nesse conjunto de dado, as distribuições não parecem a ela como nos vamos ver nos histogramas seguintes.
+
+%----------------------------------------------------------------------------------------
+
+\subsection{Distribuições}
+
+\subsubsection{Histogramas das variáveis não padronizadas}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/Xvar_histograms_part1.png}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/Xvar_histograms_part2.png}
+  \end{center}
+  \caption{Histogramas das variáveis de entradas}
+  \label{hist_X}
+  \end{figure}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=0.8\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/Yvar_histograms.png}
+  \end{center}
+  \caption{Histogramas das variáveis de saídas}
+  \label{hist_Y}
+  \end{figure}
+
+Podemos então confirmar que as variáveis de saídas são parecidas.
+No estudo futuro de regressão, será interessante de somente considerar um delas no primeiro lugar.
+
+Uma outra coisa que deve ser apontada é a forma multimodal das variáveis de saída.
+Nos podemos já ter em mente que uma regressão linear não vai dar certo.
+
+\subsubsection{Gráficos de Projeção}
+O gráficos de projeção é colocada na figura~\ref{scatter_matrix}
+
+\newgeometry{top=0.5cm}
+  \begin{figure}[p] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=1.7\textwidth, angle=-90]{/home/gjeusel/projects/intelComp/energy-efficiency/Scatter_matrix.png}
+  \end{center}
+  \caption{Gráficos de Projeção}
+  \label{scatter_matrix}
+  \end{figure}
+\restoregeometry
+
+Parece que as variáveis X1 e X2 são bem correlacionadas, e que a variável X5 não dá muito mais informações de que as outras.
+Isto é comprovado com a matriz de correlação.
+
+%----------------------------------------------------------------------------------------
+
+\subsection{Matriz de correlação}
+A matriz de correlação é colocada na figura~\ref{correlation_matrix}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/correlation_matrix.png}
+  \end{center}
+  \caption{Matriz de correlação}
+  \label{correlation_matrix}
+  \end{figure}
+
+Efetivamente, as variáveis X1 (Relative Compactness) e X2 (Surface Area) são inversamente proporcional com um coeficiente de correlação igual a -1.
+Olhando no papel dos autores, nos podemos encontrar a explicação desse resultado:
+nos valores escolhidos para as simulações, eles fizeram a hipótese de um volume total dos edifícios constantes.
+Isto acarreta num relação analítica que liga X1 com X2.
+
+Nos podemos observar também que X4 (Roof Area) é bem correlacionado com X5 (Overall Height), provavelmente devido da mesma hipótese.
+
+Finalmente, as duas variáveis de saída y1 e y2 são fortemente correlacionadas.
+
+%----------------------------------------------------------------------------------------
+%    Discussão :
+%----------------------------------------------------------------------------------------
+
+\section{Discussão}
+
+Nos fizemos a analisa de um conjunto de dados com pouco variáveis, que já estava bem condicionada (sem valores ausentes nem outliers).
+No enquanto, nos vimos que as distribuições não são trívias.
+
+A próxima etapa do projeto vai ser de encontrar um modelo capaz de prever as variáveis y1 (Heat Load) e y2 (Cooling Load) em função das variáveis geométricas dos edifícios.
+E nos já apontamos que uma regressão linear não parece ser um bom escolho de modelo por causa dessas distribuições foram do comum.
+
+Nos podemos também comentar o fato de que o website UCI colocou esse dataset na categoria de exercícios de classificação.
+A figura~\ref{energy_class_buildings} mostra a classificação oficial na Europa \cite{ref_class_energ}.
+O dataset deve ser simplesmente considerado do ponto de vista de classificação energética dos edifícios.
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=\textwidth]{/home/gjeusel/Downloads/classification-energie-building.jpg}
+\end{center}
+\caption{Classificação energética dos edifícios na Europa}
+\label{energy_class_buildings}
+\end{figure}
+
+%----------------------------------------------------------------------------------------
+%    Tables :
+%----------------------------------------------------------------------------------------
+\newpage
+\listoftables
+\listoffigures
+
+\newpage
+\bibliography{biblio} % mon fichier de base de données s'appelle bibli.bib
+\bibliographystyle{unsrt} % unsrt: par ordre d'apparition dans le text
+
+\end{document}

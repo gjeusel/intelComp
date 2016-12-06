@@ -1,0 +1,19 @@
+\select@language {brazilian}
+\contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{3}
+\contentsline {subsection}{\numberline {1.1}Problema}{3}
+\contentsline {subsection}{\numberline {1.2}Conhecimento Pr\IeC {\'e}vio}{3}
+\contentsline {section}{\numberline {2}Descri\IeC {\c c}\IeC {\~a}o dos dados}{3}
+\contentsline {subsection}{\numberline {2.1}Dados}{3}
+\contentsline {subsection}{\numberline {2.2}Estat\IeC {\'\i }sticas do conjunto de dados}{5}
+\contentsline {subsubsection}{\numberline {2.2.1}Vari\IeC {\'a}veis de entradas}{5}
+\contentsline {subsubsection}{\numberline {2.2.2}Vari\IeC {\'a}veis de sa\IeC {\'\i }das}{6}
+\contentsline {subsection}{\numberline {2.3}Detec\IeC {\c c}\IeC {\~a}o de outliers}{7}
+\contentsline {subsubsection}{\numberline {2.3.1}Box-plot}{7}
+\contentsline {subsubsection}{\numberline {2.3.2}A m\IeC {\'e}trica euclideana}{8}
+\contentsline {subsubsection}{\numberline {2.3.3}A m\IeC {\'e}trica Mahalanobis}{10}
+\contentsline {subsubsection}{\numberline {2.3.4}Discuss\IeC {\~a}o dos resultados}{12}
+\contentsline {subsection}{\numberline {2.4}Distribui\IeC {\c c}\IeC {\~o}es}{13}
+\contentsline {subsubsection}{\numberline {2.4.1}Histogramas das vari\IeC {\'a}veis n\IeC {\~a}o padronizadas}{13}
+\contentsline {subsubsection}{\numberline {2.4.2}Gr\IeC {\'a}ficos de Proje\IeC {\c c}\IeC {\~a}o}{14}
+\contentsline {subsection}{\numberline {2.5}Matriz de correla\IeC {\c c}\IeC {\~a}o}{16}
+\contentsline {section}{\numberline {3}Discuss\IeC {\~a}o}{17}

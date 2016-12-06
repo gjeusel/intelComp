@@ -1,0 +1,31 @@
+\begin{thebibliography}{1}
+
+\bibitem{ref_negawatt}
+Claude Crampes and Thomas~Olivier Léautier.
+\newblock Pour une régulation intelligente de la demande d’électricité.
+\newblock {\em Les Echos}, 2010.
+
+\bibitem{ref_europ_energ}
+Journal officiel~des Communautés~européennes.
+\newblock Directive 2002/91/ce du parlement européen et du conseil sur la
+  performance énergétique des btiments, décembre 2002.
+\newblock http://eur-lex.europa.eu/legal-content/FR/TXT/PDF/.
+
+\bibitem{ref_Athanasios}
+Tsanas Athanasios and Xifara Angeliki.
+\newblock Accurate quantitative estimation of energy performance of residential
+  buildings using statistical machine learning tools.
+\newblock {\em Energy and Buildings}, pages Vol. 49, pp. 560--567, 2012.
+
+\bibitem{ref_UCI}
+A.~Xifara A.~Tsanas.
+\newblock Energy efficiency data set, 2012.
+\newblock https://archive.ics.uci.edu/ml/datasets/Energy+efficiency.
+
+\bibitem{ref_class_energ}
+de~l'énergie et de la~mer Ministère~de l'environnement.
+\newblock Diagnostic de performance énergétique, avril 2013.
+\newblock
+  http://www.developpement-durable.gouv.fr/-Diagnostic-de-Performance,855-.html.
+
+\end{thebibliography}

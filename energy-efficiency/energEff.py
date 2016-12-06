@@ -78,7 +78,7 @@ def write_df_table_desc(_dataset, _save_fig, _fout, _header_color='#40466e', #{{
 
 def write_df_histogram(_dataset, _save_fig, _fout, _color='#40466e', _fig_size=(20,10)):#{{{
     _dataset.hist(color=_color, alpha=0.8, bins=20, figsize=_fig_size)
-    plt.title(fout_to_title(_fout), fontsize=20)
+    # plt.title(fout_to_title(_fout), fontsize=20)
     if(_save_fig):
         plt.savefig(_fout, bbox_inches='tight')
 #}}}
@@ -100,7 +100,7 @@ def write_scatter_matrix(df, _save_fig, _fout, _fig_size=(25,15)): #{{{
         ax.set_ylabel(ax.get_ylabel(), rotation=0, verticalalignment='center', labelpad=55)
         ax.set_yticks([])
 
-    plt.title(fout_to_title(_fout), fontsize=20)
+    # plt.title(fout_to_title(_fout), fontsize=20)
 
     if(_save_fig):
         plt.savefig(_fout, bbox_inches='tight')
@@ -136,17 +136,38 @@ def write_correlation_mat(df, _save_fig, _fout, _fig_size=(15,15)): #{{{
 
 #}}}
 
-def write_distance_matrix(df, _metric, _save_fig, _fout, _fig_size=(15,15)):#{{{
+def compute_distance_matrix(df, _metric): #{{{
     from scipy.spatial.distance import pdist, squareform
-    DistMatrix = squareform(pdist(df, metric=_metric))
+    dist_mat = pdist(df, metric=_metric)
+    dist_mat = squareform(dist_mat) #translates this flattened form into a full matrix
+    return dist_mat
+#}}}
+
+def write_graph_mean_dist(df, _metric, _save_fig, _fout, _fig_size=(8,5)):#{{{
+    from scipy.spatial.distance import pdist, squareform
+    dist_array = pdist(df.values, metric=_metric)
+    dist_mat = squareform(dist_array)
+
+    abscisse = np.arange(dist_mat.shape[1])
+    dist_mean_array = dist_mat.mean(1)
+    dist_mean_array = np.sort(dist_mean_array)
 
     fig, ax = plt.subplots(figsize=_fig_size)
-    plt.colorbar(ax.matshow(DistMatrix, alpha=0.8, cmap="jet")) #matshow with colormap legend
+    plt.plot(abscisse, dist_mean_array, "o", markersize=2)
 
     plt.title(fout_to_title(_fout), fontsize=20)
     if(_save_fig):
         plt.savefig(_fout, bbox_inches='tight')
-    # return DistMatrix
+#}}}
+
+def write_distance_matrix(_dist_mat, _save_fig, _fout, _fig_size=(15,15)):#{{{
+
+    fig, ax = plt.subplots(figsize=_fig_size)
+    plt.colorbar(ax.matshow(_dist_mat, alpha=0.8, cmap="jet")) #matshow with colormap legend
+
+    plt.title(fout_to_title(_fout), fontsize=20)
+    if(_save_fig):
+        plt.savefig(_fout, bbox_inches='tight')
 #}}}
 
 
@@ -156,14 +177,17 @@ def df_descr_statistics(dataset, savefig): #{{{
 
     # Describe
     print "Describe ..."
-    write_df_table_desc(dataset.iloc[:, 0:8], _save_fig=savefig, _fout="Xvar_desc.png", _header_color='#40466e')
+    write_df_table_desc(dataset.iloc[:, 0:4], _save_fig=savefig, _fout="Xvar_desc_part1.png", _header_color='#40466e')
+    write_df_table_desc(dataset.iloc[:, 4:8], _save_fig=savefig, _fout="Xvar_desc_part2.png", _header_color='#40466e')
     write_df_table_desc(dataset.iloc[:, 8:10], _save_fig=savefig, _fout="Yvar_desc.png", _header_color='#7b241b')
 
     # Histograms :
     print "Histograms ..."
-    write_df_histogram(dataset.iloc[:, 0:8], _save_fig=savefig, _fout="Xvar_histograms.png", _color='#40466e', _fig_size=(20,10))
+    write_df_histogram(dataset.iloc[:, 0:4], _save_fig=savefig, _fout="Xvar_histograms_part1.png", _color='#40466e', _fig_size=(20,10))
+    write_df_histogram(dataset.iloc[:, 4:8], _save_fig=savefig, _fout="Xvar_histograms_part2.png", _color='#40466e', _fig_size=(20,10))
     write_df_histogram(dataset.iloc[:, 8:10], _save_fig=savefig, _fout="Yvar_histograms.png", _color='#7b241b', _fig_size=(10,7))
-    write_df_histogram(dataset_Z_normed.iloc[:, 0:8], _save_fig=savefig, _fout="Xvar_Znormalized_histograms.png", _color='#40466e', _fig_size=(20,10))
+    write_df_histogram(dataset_Z_normed.iloc[:, 0:4], _save_fig=savefig, _fout="Xvar_Znormalized_histograms_part1.png", _color='#40466e', _fig_size=(20,10))
+    write_df_histogram(dataset_Z_normed.iloc[:, 4:8], _save_fig=savefig, _fout="Xvar_Znormalized_histograms_part2.png", _color='#40466e', _fig_size=(20,10))
     write_df_histogram(dataset_Z_normed.iloc[:, 8:10], _save_fig=savefig, _fout="Yvar_Znormalized_histograms.png", _color='#7b241b', _fig_size=(10,7))
 
     # Boxplot :
@@ -178,15 +202,27 @@ def df_descr_matrices(dataset, savefig): #{{{
 
     # Scatter matrix :
     print "Scatter matrix ..."
-    write_scatter_matrix(dataset, _save_fig=savefig, _fout="Scatter_matrix.png", _fig_size=(25,15))
+    # write_scatter_matrix(dataset, _save_fig=savefig, _fout="Scatter_matrix.png", _fig_size=(25,15))
 
     # Correlation matrix :
     print "Correlation matrix ..."
     write_correlation_mat(dataset, _save_fig=savefig, _fout="correlation_matrix.png")
 
+    # Distance graph :
+    print "Distance graph ..."
+    dataset_X = dataset.iloc[:, 0:8]
+    dataset_X_Z_normed = normalize_Z_score(dataset_X)
+
+    write_graph_mean_dist(dataset_X_Z_normed, _metric="euclidean", _save_fig=savefig, _fout="graph_mean_euclidean_dist_Znormed.png")
+    write_graph_mean_dist(dataset_X, _metric="mahalanobis", _save_fig=savefig, _fout="graph_mean_mahalanobis_dist.png")
+
     # Distance matrix :
     print "Distance matrix ..."
-    write_distance_matrix(dataset_Z_normed, _metric="euclidean", _save_fig=savefig, _fout="distance_matrix_euclidean_Znormed.png")
+    dist_mat_euclidean = compute_distance_matrix(dataset_X_Z_normed, _metric="euclidean")
+    write_distance_matrix(_dist_mat=dist_mat_euclidean, _save_fig=savefig, _fout="distance_matrix_euclidean_Z_normed.png")
+
+    dist_mat_mahalanobis = compute_distance_matrix(dataset_X, _metric="mahalanobis")
+    write_distance_matrix(_dist_mat=dist_mat_mahalanobis, _save_fig=savefig, _fout="distance_matrix_mahalanobis.png")
 
 #}}}
 
@@ -232,7 +268,7 @@ def main():
 
 
     if (args.descr_datas is True):
-        df_descr_statistics(dataset, savefig=args.save_fig)
+        # df_descr_statistics(dataset, savefig=args.save_fig)
         df_descr_matrices(dataset, savefig=args.save_fig)
 
         # figs = list(map(plt.figure, plt.get_fignums()))
