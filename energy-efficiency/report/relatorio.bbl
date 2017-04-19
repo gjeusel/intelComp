@@ -22,10 +22,4 @@ A.~Xifara A.~Tsanas.
 \newblock Energy efficiency data set, 2012.
 \newblock https://archive.ics.uci.edu/ml/datasets/Energy+efficiency.
 
-\bibitem{ref_class_energ}
-de~l'énergie et de la~mer Ministère~de l'environnement.
-\newblock Diagnostic de performance énergétique, avril 2013.
-\newblock
-  http://www.developpement-durable.gouv.fr/-Diagnostic-de-Performance,855-.html.
-
 \end{thebibliography}

@@ -1,0 +1,22 @@
+\select@language {brazilian}
+\contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{3}
+\contentsline {subsection}{\numberline {1.1}Problema}{3}
+\contentsline {subsection}{\numberline {1.2}Conhecimento Pr\IeC {\'e}vio}{3}
+\contentsline {section}{\numberline {2}Descri\IeC {\c c}\IeC {\~a}o dos dados - lembrete}{4}
+\contentsline {subsection}{\numberline {2.1}Dados}{4}
+\contentsline {subsection}{\numberline {2.2}Distribui\IeC {\c c}\IeC {\~o}es - Histogramas das vari\IeC {\'a}veis n\IeC {\~a}o padronizadas}{5}
+\contentsline {subsection}{\numberline {2.3}Matriz de correla\IeC {\c c}\IeC {\~a}o}{6}
+\contentsline {section}{\numberline {3}Atividade preditiva: Regress\IeC {\~o}es}{8}
+\contentsline {subsection}{\numberline {3.1}Metodologia seguida}{8}
+\contentsline {subsection}{\numberline {3.2}Modelo Linear}{8}
+\contentsline {subsubsection}{\numberline {3.2.1}Modelo Linear de primeira ordem}{9}
+\contentsline {subsubsection}{\numberline {3.2.2}Modelo Linear Polinomial de grau r}{9}
+\contentsline {subsubsection}{\numberline {3.2.3}Modelo Linear de primeira ordem com regulariza\IeC {\c c}\IeC {\~a}o de Tikhonov}{11}
+\contentsline {subsection}{\numberline {3.3}Random Forest Regressor}{13}
+\contentsline {subsubsection}{\numberline {3.3.1}Apresenta\IeC {\c c}\IeC {\~a}o do Random Forest}{13}
+\contentsline {subsubsection}{\numberline {3.3.2}Estudo da influ\IeC {\^e}ncia do n\IeC {\'u}mero de \IeC {\'a}vore escolhido}{13}
+\contentsline {subsubsection}{\numberline {3.3.3}Gr\IeC {\'a}fico dos valores preditivas}{14}
+\contentsline {subsection}{\numberline {3.4}Conjunto de resultados e compara\IeC {\c c}\IeC {\~o}es}{15}
+\contentsline {section}{\numberline {4}Estudos de Regress\IeC {\~o}es complementares}{16}
+\contentsline {subsection}{\numberline {4.1}Influ\IeC {\^e}ncia da vari\IeC {\'a}vel X6 Orientation}{16}
+\contentsline {subsection}{\numberline {4.2}Influ\IeC {\^e}ncia da padroniza\IeC {\c c}\IeC {\~a}o dos dados}{16}

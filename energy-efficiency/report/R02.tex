@@ -1,0 +1,481 @@
+%----------------------------------------------------------------------------------------
+%    PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{article} % A4 paper and 11pt font size
+
+% Brazilian encoding :
+\usepackage[brazilian]{babel} % English language/hyphenation
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx} % to insert png
+\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+%\usepackage{geometry}
+%\geometry{
+% %a4paper,
+% %total={170mm,257mm},
+% %left=25mm,
+% %top=25mm,
+%}
+
+\usepackage{adjustbox} % for better figure positionning
+\usepackage[a4paper]{geometry} % for geometry changes in only one page (\newgeometry{...})
+\usepackage[space]{grffile} % allow space in figure path
+
+\usepackage{sectsty} % Allows customizing section commands
+%\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\usepackage{float}% If comment this, figure can moves to next page
+
+\usepackage{indentfirst}% for indenting also the first paragraph after begin section
+%\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%    TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{
+\normalfont \normalsize
+\textsc{Universidade Federal do Rio de Janeiro} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Aprendizado de Máquina\\Eficiência energética dos edifícios \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Aluno: Guillaume Jeusel} % Your name
+
+%\Professor: Alexandre G. Evsukoff
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\date{\parbox{\linewidth}\bigskip%
+  Professor: Alexandre G. Evsukoff \endgraf\bigskip
+  Disciplina: Inteligência Computacional \endgraf\bigskip
+  {\centering\normalsize\today\endgraf}
+  }
+
+\begin{document}
+
+\maketitle % Print the title
+
+\newpage
+\tableofcontents % Print table of content
+
+%----------------------------------------------------------------------------------------
+%    Introduction :
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Introdução}
+
+\subsection{Problema}
+Com uma demanda de energia sempre crescente nosso mundo, o problema de economia de energia é colocado no centro das preocupações.
+O conceito de \emph{négaWatt} \cite{ref_negawatt} traduze uma economia de energia devido a uma mudança de comportamento ou de tecnologia usada, e veja essa economia como um ganho.
+Além disso, um campo cujo desperdício de energia fica ainda extremamente importante é o edifício.
+
+Por conseguinte, as investigações na área do desempenho energético dos edifícios cresceu muito recentemente;
+uma ação prioritária que as sociedades deve ter em mente é a redução do consumo de energia dos novos edifícios, também como a renovação dos antigos.
+A propósito, a legislação sobre o desempenho energético dos edifícios é sempre mas exigente,
+especificamente nos países europeus com a directiva 2002/91/CE limitando o consumo de energia dos edifícios \cite{ref_europ_energ}.
+
+%------------------------------------------------
+
+\subsection{Conhecimento Prévio}
+Para o design desses edifícios, é necessário a computação dos termos chamados \emph{“Heat Load” e “Cooling Load”}
+(que pode ser traduzido pelo “carga de aquecimento” e “carga de arrefecimento” respetivamente).
+Eles são diretamente ligados à especificação dos equipamentos responsáveis para manter uma temperatura confortável, e então ao consumo energético.
+Esses coeficientes são dependentes das características geométricas dos edifícios, como também do clima local e do uso deles (industrial, casal …).
+
+Existem muitos diferentes software de simulação que são eficientes para prever o consumo energético dos edifícios em projeto com uma precisão aceitável.
+Eles resolvam as equações diferencias da termodinmica aplicada a uma geometria particular.
+No enquanto, essas simulações podem demorar muito tempo, sem mencionar que quando um parmetro é mudado, a simulação deve ser reinicializada desde ao início.
+
+Desse fato, um interesso crescente sobre o uso das técnicas de aprendizado de máquinas nasci.
+A ideá é a seguinte: suponho que você tem um banco de dados recente com as características e cargas de um grande número de edifícios,
+o uso de estatísticas e aprendizado de máquinas pode reduzir o tempo de computação e facilitar o experimento de diversos parmetros.
+Nos podemos pensar até criar um banco de dados com os diferentes resultados de simulação,
+e depois prever o desempenho energético de um novo edifício com interpolação dos resultados que nos já temos.
+
+Isto foi a ideá do engenheiro civil \emph{Angeliki Xifara} e do matemático \emph{Athanasios Tsanas} da universidade de Oxford.
+Usando o software Ecotect, um conjunto de dado foi criado da simulação do desempenho energético para 768 geometrias de edifícios,
+assumindo uma localização em Atena, Grécia e um uso residencial com sete pessoas.
+Nos vamos estudar esse banco de dados.
+
+Para ter mais informações sobre as hipóteses de simulação, deve-se referir ao papel deles \cite{ref_Athanasios}.
+
+
+%----------------------------------------------------------------------------------------
+%    Descrição dos dados :
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Descrição dos dados - lembrete}
+
+\subsection{Dados}
+O dataset é tirado do web-site UCI – Machine Learning Repository \cite{ref_UCI}.
+A figura~\ref{dados_resumo} contem um resumo geral desse conjunto de dados.
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/resumo_dos_dados.png}
+\end{center}
+\caption{Características dos dados}
+\label{dados_resumo}
+\end{figure}
+
+Para facilitar o estudo das regressões, nos vamos somar a carga de aquecimento e a carga de arrefecimento para ter uma única saída.
+
+\medskip
+Ele é composto de 768 registros e tem 8 variáveis de entrada e 1 de saída que são as seguintes:
+
+\begin{table}[H]
+\caption{Mathematical representation of the input and output variables}
+\medskip
+\renewcommand\arraystretch{1.3}
+\renewcommand\tabcolsep{0pt}
+  \begin{tabular*}{1\linewidth}{@{\extracolsep{\fill}}cccc}
+    \hline
+    Mathematical representation & Input or output variable & Number of possible values & Unit \\
+    \hline
+    X1 & Relative Compactness & 12 & None \\
+    X2 & Surface Area & 12 & m²\\
+    X3 & Wall Area & 7 & m²\\
+    X4 & Roof Area & 4 & m²\\
+    X5 & Overall Height & 2 & m\\
+    X6 & Orientation & 4 & Unknown\\
+    X7 & Glazing Area & 4 & m²\\
+    X8 & Glazing Area Distribution & 6 & None \\
+    y & Heating Load + Cooling Load & 636 & Unknown \\
+  \end{tabular*}\par\medskip
+\label{tab:priors}
+\end{table}
+
+É importante de notar que as variáveis de entradas são descontinuidades.\newline
+Um estudo anterior foi realizada, concluindo que o conjunto de dados:
+\begin{itemize}
+\item não tinha valores ausentes
+\item não tinha valores aberrantes (outliers)
+\end{itemize}
+
+%------------------------------------------------
+
+\subsection{Distribuições - Histogramas das variáveis não padronizadas}
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Xvar_histograms_part1.png}
+  \includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Xvar_histograms_part2.png}
+  \end{center}
+  \caption{Histogramas das variáveis de entradas}
+  \label{hist_X}
+  \end{figure}
+
+Nos podemos comentar que as variáveis “X3 Wall Area”, “X4 Roof Area”, “X7 Glazing Area” e “X8 Glazing Area Distr.” não são bem centradas.
+Seja bem de processar com a metodologia de validação cruzada para ser robusto à escolha das partições de treinamento e validação.
+
+  \begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+  \begin{center}
+  \includegraphics[width=0.8\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Yvar_summed_histograms.png}
+  \end{center}
+  \caption{Histograma da variável de saída}
+  \label{hist_Y}
+  \end{figure}
+
+Deve-se apontar a forma multimodal da variável de saída.
+Nos podemos já ter em mente que uma regressão linear não vai dar certo.
+
+%----------------------------------------------------------------------------------------
+
+\subsection{Matriz de correlação}
+A matriz de correlação é colocada na figura~\ref{correlation_matrix}
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=10cm,height=10cm]{/home/gjeusel/projects/intelComp/energy-efficiency/images/correlation_matrix_reg_prob with X6.png}
+\end{center}
+\caption{Matriz de correlação}
+\label{correlation_matrix}
+\end{figure}
+
+As variáveis X1 (Relative Compactness) e X2 (Surface Area) são inversamente proporcional com um coeficiente de correlação igual a -1.
+Olhando no papel dos autores, nos podemos encontrar a explicação desse resultado:
+nos valores escolhidos para as simulações, eles fizeram a hipótese de um volume total dos edifícios constantes.
+Isto acarreta num relação analítica que liga X1 com X2.
+Observa-se o mesmo fenômeno com "X4 Roof Area" e "X5 Overall Height".
+
+As variáveis de entradas “X4 Roof Area” e “X5 Overall Height” são variáveis altamente correlacionadas com a variável de saída.
+Elas vão ter um efeito importante na predição do y.
+
+No entanto, nos vemos que a variavel "X5 Orientation" que pode ser retirada devido ao fato que ela não é correlacionada com nenhuma otras variavel:
+ela não da informações relevantes.
+Nós removemos essa variável para a continuação do estudo.
+
+
+%----------------------------------------------------------------------------------------
+%    Atividade preditiva: regressões
+%----------------------------------------------------------------------------------------
+\newcommand{\norme}[1]{\left\Vert #1\right\Vert}
+\newcommand{\abs}[1]{\left\vert #1\right\vert}
+\newpage
+\section{Atividade preditiva: Regressões}
+
+%----------------------------------------------------------------------------------------
+\subsection{Metodologia seguida}
+
+Para cada modelo, será apresentado rapidamente o conceito matemático, e dado o gráfico (y medido, y predito) obtido.\newline
+A discussão sobre o desempenho de cada modelo será feita no final da secção, comparando todas as métricas de validação obtidas.\newline
+
+As métricas de validação usadas são:
+\begin{itemize}
+\item o \emph{coeficiente de determinação} R2:
+    \begin{equation}
+    R^{2} = \frac{\sum_{t=1}^{N} (\hat{y}(t) - \bar{y})^2}{\sum_{t=1}^{N} (y(t) - \bar{y})^2}
+    \end{equation}
+\item \emph{raiz quadrada do EMQ}, conhecida como RMS:
+    \begin{equation}
+    RMS = \sqrt{\frac{1}{N}\sum_{t=1}^{N} (y(t) - \hat{y}(t))^2}
+    \end{equation}
+\item \emph{erro absoluto médio percentual} MAPE:
+    \begin{equation}
+    MAPE = \frac{1}{N}\sum_{t=1}^{N} \abs{\frac{y(t) - \hat{y}(t)}{y(t)}}
+    \end{equation}
+\end{itemize}
+
+$\hat{y}(t)$ é a previsão de y calculada pelo modelo de regressão no ponto $x(t)$.\newline
+
+Finalmente, é importante de precisar que todos os $\hat{y}$ computados serão a união dos resultados de \emph{predições cruzadas} de \emph{10 ciclos}.
+Isto quer significar que o conjunto de dados vai ser dividido em 10 subconjuntos.
+Em cada ciclo (por um total de 10), o modelo é ajustado utilizando 9 subconjuntos e a saída é estimada por o subconjunto restante.
+No fim, todas as estimativas serão concatenadas de maneira que nos temos uma estimativa da saída para cada registros.\newline
+As estatísticas de validação serão calculadas com esse $\hat{y}$.
+
+%----------------------------------------------------------------------------------------
+\subsection{Modelo Linear}
+
+No modelo linear, a estimativa $\hat{y}$ da variavel de saída é procurado usando a forma seguinte:
+\begin{equation}
+\hat{y}(t) = f(x(t),{\theta}) = \hat{x}(t){\theta}^{T} = \sum_{t=1}^{N} \hat{x}_i(t){\theta}_i
+\end{equation}
+com:
+\begin{itemize}
+\item $\hat{x}(t) = [1, h_1(x(t)), ..., h_N(x(t))]$ os regressores e $h_i(x(t))$ as funções de base
+\item ${\theta} = ({\theta}_1, ...,{\theta}_N)$ o vetor de parâmetros
+\end{itemize}
+
+\medskip
+Deve-se minimizar a função de custo, chamada de Erro Médio Quadrático para ajustar os parâmetros:
+\begin{equation}
+EMQ({\theta}) = \frac{1}{N}\sum_{t=1}^{N} (y(t) - \hat{y}(t))^{2}
+\end{equation}
+
+%----------------------------------------------------------------------------------------
+\subsubsection{Modelo Linear de primeira ordem}
+Nesse modelo, os regressores são as próprias variáveis de entrada: $\hat{x}(t) = [1, x(t)]$, i.e $h_i = Id$.
+
+O gráfico dos valores preditivas é o seguinte:
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=8cm,height=8cm]{/home/gjeusel/projects/intelComp/energy-efficiency/images/graph_cv_predict_Linear.png}
+\end{center}
+\caption{Predicted vs measured - Linear first order}
+\label{PvsM_Linear_First_Order}
+\end{figure}
+
+%----------------------------------------------------------------------------------------
+\subsubsection{Modelo Linear Polinomial de grau r}
+Nesse modelo, as funções de base são de forma polinômial: $h_i(x(t)) = x(t)^{i})$, com r o grau do polinômio.
+
+O que dá: $\hat{x}(t) = [1, x(t), x(t)^{2}, ..., x(t)^{r}]$ como regressores.
+
+Um estudo sobre a influência do grau escolhida do polinômio foi feita.
+As estatísticas de validação obtidas para cada grau é dado pela tabela~\ref{tabela_inf_grau} e plotada na figura~\ref{graph_inf_grau}.\newline
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Table of scores per Polynomial Regressor model.png}
+\caption{Tabela influência grau - desempenho}
+\label{tabela_inf_grau}
+\bigskip
+\bigskip
+\includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Polynomial regressor scores vs deg.png}
+\caption{Gráfico influência grau - desempenho}
+\label{graph_inf_grau}
+\end{center}
+\end{figure}
+
+Os scores R2 e RMS obtidos para os polinômios de grau 4 e 5 não faze nenhum sentido.
+Eu não consegui entender onde ficou o problema na hora da computação deles.
+Lendo a documentação scikit da função r2\_score, um valor negativo significa que o modelo é \emph{"arbitrarily worse"}.
+
+No enquanto, nos podemos observar que os graus 2 e 3 são bem parecidos em termo de qualidade de modelagem.
+Além disso, para graus superiores nos podemos assumir uma situação de overfitting, com uma complexidade da modelagem superior ao que é preciso.\newline
+É interessante de notar que para o polinômio de grau 1, a solução do modelo linear simple é encontrada.
+
+O gráfico dos valores preditivas para o Modelo Linear Polinomial de grau 3 é o seguinte:
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=8cm,height=8cm]{/home/gjeusel/projects/intelComp/energy-efficiency/images/graph_cv_predict_Polynomial deg 3.png}
+\end{center}
+\caption{Predicted vs measured - Linear Polinomial deg 3}
+\label{PvsM_Linear_Polinomial_deg3}
+\end{figure}
+
+
+%----------------------------------------------------------------------------------------
+\subsubsection{Modelo Linear de primeira ordem com regularização de Tikhonov}
+Usando a regularização de Tikhonov, chamada "Ridge regression" em inglês, a função de custo que tem que ser minimizada é da forma:
+\begin{equation}
+EMQR({\mu},{\theta}) = \frac{1}{N}\sum_{t=1}^{N} (y(t) - \hat{y}(t))^{2} + {\mu}\norme{{\theta}}^{2}
+\end{equation}
+Ela é chamada de Erro Médio Quadrático Regularizado.
+Isto é uma técnica de controle de complexidade do modelo através da aplicação de uma penalidade sobre o vetor de parametros.
+
+A influência da penalidade escolhida (alpha) sobre as métricas de validação pode ser deduzido da figura~\ref{graph_inf_alpha}.\newline
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Ridge regressor scores vs alpha.png}
+\caption{Gráfico influência alpha - desempenho}
+\label{graph_inf_alpha}
+\end{center}
+\end{figure}
+
+Dá para ver que os resultados são melhorados com um alpha pequeno, mas que esse ganho de desempenho é quase insignificante.
+Além disso, quando o alpha tende para 0, nos convergemos para a solução do problema linear de preimeira ordem sem regularização.
+Isto quer dizer que para esse conjunto de dados, nos não podemos esperar obter melhores resultados usando essa regularização.
+
+O gráfico dos valores preditivas para o Modelo Linear de primeira ordem com regularização de Tikhonov é o seguinte:
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=8cm,height=8cm]{/home/gjeusel/projects/intelComp/energy-efficiency/images/graph_cv_predict_Linear + SVD regularization alpha=0.001.png}
+\end{center}
+\caption{Predicted vs measured - Ridge alpha=0.001}
+\label{PvsM_Linear_Ridge}
+\end{figure}
+
+
+%----------------------------------------------------------------------------------------
+\subsection{Random Forest Regressor}
+
+\subsubsection{Apresentação do Random Forest}
+A ideá seguida nesse modelo é simplesmente de treinar o modelo com um número de árvore de decisão grande com características aleatórias,
+e de pegar a media para melhorar a capacidade preditiva.
+Por lembrete, a árvore de decisão é uma estrutura de dados definida recursivamente como:
+\begin{itemize}
+\item Um nó folha que contém o valor de uma classe
+\item Um nó decisão que contém um teste sobre algum atributo.
+\item Para cada resultado do teste existe uma aresta para uma subárvore, que tem a mesma estrutura da árvore.
+\end{itemize}
+
+Inicialmente designado para problemas de classificação, nos podemos utilizar ele assumindo que as nó folhas contem os valores da variável de saída,
+o teste como uma verificação da distancia entre o valor previsto e o valor querido.
+A figura~\ref{exemple_scikit_decisionTree} do website scikit ilustra o algoritmo de ávore de decisão usada para aproximar uma curva de seno com ruído.
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=8cm,height=8cm]{/home/gjeusel/projects/intelComp/energy-efficiency/images/decision tree algo scikit exemple.png}
+\end{center}
+\caption{Exemple : decision tree used to estimate a sine curve with additional noisy observation}
+\label{exemple_scikit_decisionTree}
+\end{figure}
+
+\subsubsection{Estudo da influência do número de ávore escolhido}
+
+Sem limite de profundidade, as métricas de validação obtidas em função do número de árvore escolhido é colocado na figura~\ref{graph_inf_numtree}.\newline
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Random Forest regressor scores vs num trees.png}
+\caption{Gráfico influência número de árvore - desempenho}
+\label{graph_inf_numtree}
+\end{center}
+\end{figure}
+
+Nos podemos observar um variabilidade importante sendo as métricas RMS e MAPE, reflectindo o comportamento aleatório do algoritmo.
+No enquanto, a métrica R2 não muda muito em função do número de árvore escolhido.
+Isto é possivelmente devido ao fato que na formula do calculo do coeficiente de determinação,
+é pegado o valor média da saída $\bar{y}$, o que acarreta suavizar o comportamento aleatório.
+
+\subsubsection{Gráfico dos valores preditivas}
+
+O gráfico dos valores preditivas para o algoritmo de Random Forest com 10 árvores é o seguinte:
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=8cm,height=7cm]{/home/gjeusel/projects/intelComp/energy-efficiency/images/graph_cv_predict_Random Forest 10 trees.png}
+\end{center}
+\caption{Predicted vs measured - RandomForest n\_trees=10}
+\label{PvsM_RandomForest}
+\end{figure}
+
+
+%----------------------------------------------------------------------------------------
+\subsection{Conjunto de resultados e comparações}
+
+As estatísticas de validação de todos os modelos anteriormente apresentados são colocado na tabela~\ref{table_all_results}.
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Table of validation metrics per Regressor model without X6.png}
+\end{center}
+\caption{Métricas de validação em função do modelo}
+\label{table_all_results}
+\end{figure}
+
+Nos podemos concluir que esse conjunto de dados não é bem modelado por modelos lineares simples.
+No enquanto o modelo linear polinômial de grau 3 tem aproximativamente o mesmo desempenho que o modelo de RandomForest.
+Seja bem de comparar esses modelos com modelos de redes neurais, mas eu não consegui instalar a última versão de scikit que tem esses algoritmos de rede neural.
+
+
+%----------------------------------------------------------------------------------------
+%    Estudos de Regressões complementares
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Estudos de Regressões complementares}
+
+%----------------------------------------------------------------------------------------
+\subsection{Influência da variável "X6 Orientation"}
+
+A mesma tabela de resultados pegando em conta a variável X6:
+
+\begin{figure}[H] % image flottante, i.e latex selectione le meilleur placement
+\begin{center}
+\includegraphics[width=\textwidth]{/home/gjeusel/projects/intelComp/energy-efficiency/images/Table of validation metrics per Regressor model.png}
+\end{center}
+\caption{Métricas de validação em função do modelo - com a variável X6}
+\label{table_all_results_withX6}
+\end{figure}
+
+Comparando com a tabela~\ref{table_all_results}, nos podemos certificar que a variável X6 tem uma influencia desprezível.
+
+
+%----------------------------------------------------------------------------------------
+%    Tables:
+%----------------------------------------------------------------------------------------
+\newpage
+\listoftables
+\listoffigures
+
+\newpage
+\bibliography{biblio} % mon fichier de base de données s'appelle bibli.bib
+\bibliographystyle{unsrt} % unsrt: par ordre d'apparition dans le text
+
+\end{document}

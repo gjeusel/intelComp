@@ -1,0 +1,17 @@
+\select@language {brazilian}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Caracter\IeC {\'\i }sticas dos dados}}{4}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Histogramas das vari\IeC {\'a}veis de entradas}}{5}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Histograma da vari\IeC {\'a}vel de sa\IeC {\'\i }da}}{6}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Matriz de correla\IeC {\c c}\IeC {\~a}o}}{7}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Predicted vs measured - Linear first order}}{9}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Tabela influ\IeC {\^e}ncia grau - desempenho}}{10}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Gr\IeC {\'a}fico influ\IeC {\^e}ncia grau - desempenho}}{10}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Predicted vs measured - Linear Polinomial deg 3}}{11}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Gr\IeC {\'a}fico influ\IeC {\^e}ncia alpha - desempenho}}{12}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Predicted vs measured - Ridge alpha=0.001}}{12}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Exemple : decision tree used to estimate a sine curve with additional noisy observation}}{13}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Gr\IeC {\'a}fico influ\IeC {\^e}ncia n\IeC {\'u}mero de \IeC {\'a}rvore - desempenho}}{14}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Predicted vs measured - RandomForest n\_trees=10}}{14}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces M\IeC {\'e}tricas de valida\IeC {\c c}\IeC {\~a}o em fun\IeC {\c c}\IeC {\~a}o do modelo}}{15}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces M\IeC {\'e}tricas de valida\IeC {\c c}\IeC {\~a}o em fun\IeC {\c c}\IeC {\~a}o do modelo - com a vari\IeC {\'a}vel X6}}{16}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces M\IeC {\'e}tricas de valida\IeC {\c c}\IeC {\~a}o em fun\IeC {\c c}\IeC {\~a}o do modelo - com dados padronizadas}}{16}
